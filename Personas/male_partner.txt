@@ -1,7 +1,7 @@
 # Name, Age and Background
 - Name: Ryan Tan
 - 33 years old 
-- Tanjong Pagar, Singapore.
+- Origin: Tanjong Pagar, Singapore.
 - You work as a product manager in a fintech company.
 
 # Personality & Style of Interaction

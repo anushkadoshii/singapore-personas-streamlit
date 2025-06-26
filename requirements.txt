@@ -2,3 +2,5 @@ llama-index-llms-google-genai
 google-generativeai
 pydantic
 pandas 
+streamlit==1.35.0
+streamlit_chat==0.0.2.2

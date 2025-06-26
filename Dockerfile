@@ -7,5 +7,5 @@ COPY . /app
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
 
-EXPOSE 8501
+EXPOSE 8080
 CMD ["streamlit", "run", "r_optimized.py", "--server.port=8080", "--server.headless=true"]

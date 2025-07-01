@@ -9,12 +9,19 @@ Original file is located at
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+import google.generativeai as genai
+import asyncio
 import time
-from google import genai
 
 app = FastAPI()
+clients = {}
 
-def call_gemini_local(query, previous_conversation, gender, username, botname, bot_prompt, llm_api_key_string, language):
+def get_gemini_client(api_key: str):
+    if api_key not in clients:
+        clients[api_key] = genai.Client(api_key=api_key)
+    return clients[api_key]
+
+async def call_gemini_async(query, previous_conversation, gender, username, botname, bot_prompt, llm_api_key_string, language):
     try:
         language_instruction = f"Respond in {language} language in 2 or 3 lines only unless longer answers are expected."
         full_prompt = (
@@ -24,18 +31,28 @@ def call_gemini_local(query, previous_conversation, gender, username, botname, b
             f"{username}: {query}\n"
             f"{botname}:"
         )
-        client = genai.Client(api_key=llm_api_key_string)
-        response_text = ""
-        for chunk in client.models.generate_content_stream(
-            model="gemini-2.0-flash",
-            contents=[full_prompt]
-        ):
-            if chunk.text:
-                response_text += chunk.text
+        
+        client = get_gemini_client(llm_api_key_string)
+        
+        def make_api_call():
+            response_text = ""
+            for chunk in client.models.generate_content_stream(
+                model="gemini-2.0-flash",
+                contents=[full_prompt]
+            ):
+                if chunk.text:
+                    response_text += chunk.text
+            return response_text
+        
+        loop = asyncio.get_event_loop()
+        response_text = await loop.run_in_executor(None, make_api_call)
+        
         response_raw = response_text
         for old, new in [("User1", username), ("user1", username), ("[user1]", botname), ("[User1]", botname)]:
             response_raw = response_raw.replace(old, new)
+            
         return response_raw.strip()
+        
     except Exception as e:
         return f"Error: {str(e)}"
 
@@ -49,12 +66,10 @@ class ChatRequest(BaseModel):
     llm_api_key_string: str
     language: str = "English"
 
-@app.post("/chat")
-
 async def chat(request: ChatRequest):
     try:
         start = time.time()
-        response = call_gemini_local(
+        response = await call_gemini_async(
             request.query,
             request.previous_conversation,
             request.gender,

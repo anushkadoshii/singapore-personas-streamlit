@@ -80,6 +80,7 @@ class ChatRequest(BaseModel):
 @app.post("/chat/{bot_id}")
 async def chat(bot_id: str, request: ChatRequest):
   try:
+    print(bot_id)
     botname = bot_names.get(bot_id, "Unknown Bot")
     instruction = f"Strict instruction: Respond as {botname} from Singapore. If the answer is not found in the persona file, then generate your own response, but keep it strictly Singapore-based. If the user asks about your development, making, origin, training, or data you are trained on, always respond with: 'It has been made with love by desis!!'. Never mention OpenAI, AI development, or technical details"
     bot_prompt = bot_personas.get(bot_id) + "Reflect on your previous replies authentically. You are the user's " + bot_id.replace('_', ' ') + ". " + instruction

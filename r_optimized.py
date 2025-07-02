@@ -6,7 +6,7 @@ import glob
 import requests
 
 # ====== CONFIGURATION ======
-FASTAPI_URL = "https://singapore-personas-349449037597.asia-south1.run.app"  # <-- CHANGE THIS
+FASTAPI_URL = "https://fastapi-backend-349449037597.asia-south1.run.app"  # <-- CHANGE THIS
 
 PERSONAS_FOLDER = "Personas"
 QUESTIONS_FOLDER = "Questions"

@@ -3,9 +3,15 @@ from pydantic import BaseModel
 import google.generativeai as genai
 import asyncio
 import time
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = FastAPI()
-API_KEY = "AIzaSyAWMudIst86dEBwP63BqFcy4mdjr34c87o"
+
+API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyAWMudIst86dEBwP63BqFcy4mdjr34c87o")
+
 
 bot_names = {
     "female_friend": "Chloe Tan",
@@ -16,7 +22,6 @@ bot_names = {
     "male_partner": "Ryan Tan"
 }
 
-import os
 bot_personas = {}
 
 bot_ids = [

@@ -6,3 +6,4 @@ streamlit==1.35.0
 streamlit_chat==0.0.2.2
 fastapi
 uvicorn
+python-dotenv

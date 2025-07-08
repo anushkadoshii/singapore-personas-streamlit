@@ -267,10 +267,8 @@ jobs:
     - name: Update Streamlit configuration with FastAPI URL
       run: |
         echo "🔧 Updating Streamlit configuration with new FastAPI URL..."
-        
-        # Update the FASTAPI_URL in r_optimized.py
-        sed -i 's|FASTAPI_URL = "https://fastapi-backend-349449037597.asia-south1.run.app"|FASTAPI_URL = "${{ steps.fastapi-url.outputs.fastapi_url }}"|g' r_optimized.py
-        
+        # Replace any FASTAPI_URL assignment with the new deployed URL
+        sed -i 's|^FASTAPI_URL = ".*"|FASTAPI_URL = "${{ steps.fastapi-url.outputs.fastapi_url }}"|g' r_optimized.py
         # Verify the change was made
         if grep -q "${{ steps.fastapi-url.outputs.fastapi_url }}" r_optimized.py; then
             echo "✅ Streamlit configuration updated successfully with: ${{ steps.fastapi-url.outputs.fastapi_url }}"

@@ -257,15 +257,6 @@ jobs:
           --set-env-vars="PROJECT_ID=${{ env.PROJECT_ID }},GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}"
         echo "✅ FastAPI backend deployed successfully"
 
-    - name: Ensure FastAPI Cloud Run allows unauthenticated
-      run: |
-        gcloud run services add-iam-policy-binding ${{ env.FASTAPI_SERVICE_NAME }} \
-          --region ${{ env.REGION }} \
-          --member="allUsers" \
-          --role="roles/run.invoker" \
-          --platform managed
-        echo "✅ Unauthenticated access enabled for FastAPI backend"
-
     - name: Get FastAPI service URL
       id: fastapi-url
       run: |
@@ -316,8 +307,11 @@ jobs:
         echo "🚀 DEPLOYMENT COMPLETED SUCCESSFULLY!"
         echo "🎉 =========================================="
         echo ""
+        
+        # Get and display URLs
         FASTAPI_URL=$(gcloud run services describe ${{ env.FASTAPI_SERVICE_NAME }} --region ${{ env.REGION }} --format 'value(status.url)')
         STREAMLIT_URL=$(gcloud run services describe ${{ env.STREAMLIT_SERVICE_NAME }} --region ${{ env.REGION }} --format 'value(status.url)')
+        
         echo "📱 FastAPI Backend URL:"
         echo "   $FASTAPI_URL"
         echo ""
@@ -327,7 +321,7 @@ jobs:
         echo "✅ Both services are now live and accessible!"
         echo ""
         echo "🧪 Testing FastAPI health..."
-        curl -f "$FASTAPI_URL/" > /dev/null && echo "✅ FastAPI root accessible" || echo "⚠️ FastAPI root check failed"
+        curl -f "$FASTAPI_URL/docs" > /dev/null && echo "✅ FastAPI docs accessible" || echo "⚠️ FastAPI docs check failed"
         echo ""
         echo "🎯 Your Singapore Personas app is ready to use!"
 

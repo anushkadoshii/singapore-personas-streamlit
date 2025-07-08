@@ -7,7 +7,7 @@ on:
     branches: [ main, master ]
 
 env:
-  PROJECT_ID: lik-460814
+  PROJECT_ID: cvoapi
   REGION: asia-south1
   FASTAPI_SERVICE_NAME: fastapi-backend
   STREAMLIT_SERVICE_NAME: streamlit-frontend
@@ -267,10 +267,8 @@ jobs:
     - name: Update Streamlit configuration with FastAPI URL
       run: |
         echo "🔧 Updating Streamlit configuration with new FastAPI URL..."
-        
-        # Update the FASTAPI_URL in r_optimized.py
-        sed -i 's|FASTAPI_URL = "https://fastapi-backend-349449037597.asia-south1.run.app"|FASTAPI_URL = "${{ steps.fastapi-url.outputs.fastapi_url }}"|g' r_optimized.py
-        
+        # Replace any FASTAPI_URL assignment with the new deployed URL
+        sed -i 's|^FASTAPI_URL = ".*"|FASTAPI_URL = "${{ steps.fastapi-url.outputs.fastapi_url }}"|g' r_optimized.py
         # Verify the change was made
         if grep -q "${{ steps.fastapi-url.outputs.fastapi_url }}" r_optimized.py; then
             echo "✅ Streamlit configuration updated successfully with: ${{ steps.fastapi-url.outputs.fastapi_url }}"
@@ -372,7 +370,7 @@ jobs:
           echo "   4. Try different languages and personalities"
           echo ""
           echo "📊 Monitor your deployment:"
-          echo "   - Google Cloud Console: https://console.cloud.google.com/run?project=lik-460814"
+          echo "   - Google Cloud Console: https://console.cloud.google.com/run?project=cvoapi"
           echo "   - Logs: Check Cloud Run logs for any issues"
           echo ""
         else
@@ -386,7 +384,7 @@ jobs:
           echo "💡 Common troubleshooting steps:"
           echo "   1. Verify GCP_CREDENTIALS secret is properly set"
           echo "   2. Verify GEMINI_API_KEY secret is properly set"
-          echo "   3. Check that project ID 'lik-460814' is correct"
+          echo "   3. Check that project ID 'cvoapi' is correct"
           echo "   4. Ensure required APIs are enabled in GCP"
           echo "   5. Check Docker image build logs for any errors"
           echo ""

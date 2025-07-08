@@ -113,3 +113,7 @@ async def chat(bot_id: str, request: ChatRequest):
 
   except Exception as e:
       raise HTTPException(status_code=500, detail="Internal server error")
+
+@app.get("/")
+def read_root():
+    return {"status": "ok"}

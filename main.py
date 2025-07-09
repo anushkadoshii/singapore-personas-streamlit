@@ -10,7 +10,7 @@ load_dotenv()
 
 app = FastAPI()
 
-API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyAWMudIst86dEBwP63BqFcy4mdjr34c87o")
+API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyBxZgEiggJanYc8wiRoO6SfSVOX76fecRM")
 
 
 bot_names = {
